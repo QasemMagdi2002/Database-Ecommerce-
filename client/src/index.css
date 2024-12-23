@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+.navbar, .footer {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  transition: background-color 0.2s ease-in-out, transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
