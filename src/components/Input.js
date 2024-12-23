@@ -1,10 +1,10 @@
 import React from "react";
-import { cn } from "@shadcn/ui/utils";
+import classNames from "classnames";
 
 const Input = ({ className, ...props }) => {
   return (
     <input
-      className={cn(
+      className={classNames(
         "w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500",
         className
       )}

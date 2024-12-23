@@ -1,10 +1,10 @@
 import React from "react";
-import { cn } from "@shadcn/ui/utils";
+import classNames from "classnames";
 
 const Button = ({ children, className, ...props }) => {
   return (
     <button
-      className={cn(
+      className={classNames(
         "px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition",
         className
       )}

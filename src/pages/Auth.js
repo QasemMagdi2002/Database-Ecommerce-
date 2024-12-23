@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Input from "../components/Input";
 
@@ -6,10 +7,13 @@ const Auth = ({ onLoginSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [name, setName] = useState(""); // For Signup
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // React Router's navigation hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loader
     const endpoint = isLogin
       ? "http://localhost:5000/api/users/login"
       : "http://localhost:5000/api/users/register";
@@ -23,13 +27,17 @@ const Auth = ({ onLoginSuccess }) => {
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("token", data.token);
-        onLoginSuccess();
+        localStorage.setItem("token", data.token); // Save JWT token
+        onLoginSuccess(); // Notify parent component
+        navigate("/shop"); // Navigate to shop page
       } else {
-        console.error(data.error || "Authentication failed");
+        alert(data.error || "Authentication failed");
       }
     } catch (error) {
       console.error("Network error:", error);
+      alert("Unable to connect to the server");
+    } finally {
+      setLoading(false); // Hide loader
     }
   };
 
@@ -57,7 +65,9 @@ const Auth = ({ onLoginSuccess }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit">{isLogin ? "Login" : "Signup"}</Button>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Loading..." : isLogin ? "Login" : "Signup"}
+        </Button>
       </form>
       <Button
         className="mt-4 bg-gray-500 hover:bg-gray-600"

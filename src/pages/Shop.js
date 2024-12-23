@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Button from "../components/Button";
 
-const Shop = ({ onAddToCart }) => {
+const Shop = ({ searchTerm }) => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -12,11 +12,15 @@ const Shop = ({ onAddToCart }) => {
       .catch((error) => console.error(error));
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Shop</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <Card key={product._id} className="p-4 flex flex-col items-center">
             <div className="w-40 h-40 bg-gray-100 flex items-center justify-center">
               <img
@@ -27,12 +31,7 @@ const Shop = ({ onAddToCart }) => {
             </div>
             <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
             <p className="text-gray-600">${product.price}</p>
-            <Button
-              className="mt-4"
-              onClick={() => onAddToCart(product)}
-            >
-              Add to Cart
-            </Button>
+            <Button className="mt-4">Add to Cart</Button>
           </Card>
         ))}
       </div>

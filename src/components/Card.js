@@ -1,10 +1,10 @@
 import React from "react";
-import { cn } from "@shadcn/ui/utils";
+import classNames from "classnames";
 
 const Card = ({ children, className, ...props }) => {
   return (
     <div
-      className={cn(
+      className={classNames(
         "border rounded p-4 shadow-md bg-white hover:shadow-lg transition",
         className
       )}
