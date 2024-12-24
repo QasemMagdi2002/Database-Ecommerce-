@@ -9,6 +9,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "cra-template": "1.2.0",
+    "lucide-react": "^0.469.0",
     "postcss": "^8.4.49",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
