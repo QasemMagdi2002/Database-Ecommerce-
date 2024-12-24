@@ -12,9 +12,10 @@ const Shop = ({ searchTerm }) => {
       .catch((error) => console.error(error));
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = products.filter((product) => {
+    const productName = product.name || ""; // Fallback to empty string if name is undefined
+    return productName.toLowerCase().includes((searchTerm || "").toLowerCase());
+  });
 
   return (
     <div className="container mx-auto p-4">
@@ -25,12 +26,12 @@ const Shop = ({ searchTerm }) => {
             <div className="w-40 h-40 bg-gray-100 flex items-center justify-center">
               <img
                 src={product.images?.[0] || "https://via.placeholder.com/150"}
-                alt={product.name}
+                alt={product.name || "Product"}
                 className="object-cover w-full h-full"
               />
             </div>
-            <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
-            <p className="text-gray-600">${product.price}</p>
+            <h2 className="text-lg font-semibold mt-2">{product.name || "Unnamed Product"}</h2>
+            <p className="text-gray-600">${product.price || "N/A"}</p>
             <Button className="mt-4">Add to Cart</Button>
           </Card>
         ))}
