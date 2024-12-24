@@ -9,13 +9,14 @@ import Admin from "./pages/Admin";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // Loading state for auth check
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
     }
+    setIsCheckingAuth(false); // Mark authentication check as completed
   }, []);
 
   const handleLoginSuccess = () => {
@@ -23,27 +24,26 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsAuthenticated(false);
+    localStorage.removeItem("token"); // Clear token
+    setIsAuthenticated(false); // Update state
   };
 
-  const handleSearch = (term) => {
-    setSearchTerm(term); // Update search term
-  };
+  if (isCheckingAuth) {
+    // Display a loader while checking authentication
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
 
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} onSearch={handleSearch} />
+        <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Navigate to="/auth" />} />
             <Route path="/auth" element={<Auth onLoginSuccess={handleLoginSuccess} />} />
             <Route
               path="/shop"
-              element={
-                isAuthenticated ? <Shop searchTerm={searchTerm} /> : <Navigate to="/auth" />
-              }
+              element={isAuthenticated ? <Shop /> : <Navigate to="/auth" />}
             />
             <Route
               path="/checkout"
