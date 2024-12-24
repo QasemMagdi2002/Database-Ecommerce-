@@ -9,7 +9,16 @@ const upload = multer({ storage });
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.status(200).json(products);
+
+    // Convert binary images to base64 strings
+    const productsWithImages = products.map((product) => {
+      const images = product.images.map((image) =>
+        `data:image/jpeg;base64,${image.toString('base64')}`
+      );
+      return { ...product._doc, images }; // Include converted images
+    });
+
+    res.status(200).json(productsWithImages);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -26,7 +35,16 @@ const searchProducts = async (req, res) => {
     if (category) filter.category = category;
 
     const products = await Product.find(filter).sort({ price: -1 });
-    res.status(200).json(products);
+
+    // Convert binary images to base64 strings for search results
+    const productsWithImages = products.map((product) => {
+      const images = product.images.map((image) =>
+        `data:image/jpeg;base64,${image.toString('base64')}`
+      );
+      return { ...product._doc, images };
+    });
+
+    res.status(200).json(productsWithImages);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -81,21 +99,23 @@ const uploadProductImage = async (req, res) => {
   }
 };
 
+// Get images for a specific product
 const getProductImages = async (req, res) => {
-    try {
-      const { productId } = req.params;
-      const product = await Product.findById(productId);
-  
-      if (!product) return res.status(404).json({ error: 'Product not found' });
-  
-      // Convert binary images to base64 for frontend
-      const imagesBase64 = product.images.map((img) => `data:image/jpeg;base64,${img.toString('base64')}`);
-      res.status(200).json({ images: imagesBase64 });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  };
-  
+  try {
+    const { productId } = req.params;
+    const product = await Product.findById(productId);
+
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+
+    // Convert binary images to base64 for frontend
+    const imagesBase64 = product.images.map((img) =>
+      `data:image/jpeg;base64,${img.toString('base64')}`
+    );
+    res.status(200).json({ images: imagesBase64 });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 module.exports = {
   getProducts,
